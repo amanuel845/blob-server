@@ -133,9 +133,11 @@ export default async function handler(req, res) {
         // Build the pathname (same folder structure)
         const pathname = `uploads/${category}/${filename}`;
 
-        // Generate a presigned URL (valid 15 min)
+        // ---- FIX: Use issueSignedToken to get delegation token ----
+        const { clientSigningToken, delegationToken } = await issueSignedToken({ token: BLOB_READ_WRITE_TOKEN });
+
         const { presignedUrl } = await presignUrl(
-          { token: BLOB_READ_WRITE_TOKEN, operation: 'put' },
+          { clientSigningToken, delegationToken },
           {
             pathname,
             operation: 'put',
