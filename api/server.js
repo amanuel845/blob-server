@@ -134,7 +134,7 @@ export default async function handler(req, res) {
         const pathname = `uploads/${category}/${filename}`;
 
         // ---- FIX: Use issueSignedToken to get delegation token ----
-        const { clientSigningToken, delegationToken } = await issueSignedToken({ token: BLOB_READ_WRITE_TOKEN });
+        const { clientSigningToken, delegationToken } = await issueSignedToken({token: BLOB_READ_WRITE_TOKEN, operations: ['put']});
 
         const { presignedUrl } = await presignUrl(
           { clientSigningToken, delegationToken },
