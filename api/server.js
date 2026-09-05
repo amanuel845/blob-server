@@ -1,4 +1,4 @@
-import { put, list, del, presignUrl } from '@vercel/blob'; // <-- added presignUrl
+import { put, list, del, presignUrl, issueSignedToken } from '@vercel/blob';
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import crypto from 'crypto';
