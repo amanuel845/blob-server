@@ -112,46 +112,47 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     // Check if this is a presign request
     if (req.query.action === 'presign') {
-      const form = new IncomingForm();
-      try {
-        // Parse the multipart form data (only fields, no files)
-        const { fields } = await new Promise((resolve, reject) => {
-          form.parse(req, (err, fields, files) => {
-            if (err) reject(err);
-            else resolve({ fields, files });
-          });
-        });
+  const form = new IncomingForm();
+  try {
+    const { fields } = await new Promise((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        else resolve({ fields, files });
+      });
+    });
 
-        // Extract fields (formidable gives arrays)
-        const filename = fields.filename?.[0] || fields.filename;
-        const category = fields.category?.[0] || fields.category || 'others';
+    const filename = fields.filename?.[0] || fields.filename;
+    const category = fields.category?.[0] || fields.category || 'others';
 
-        if (!filename) {
-          return res.status(400).json({ error: 'filename is required' });
-        }
-
-        // Build the pathname (same folder structure)
-        const pathname = `uploads/${category}/${filename}`;
-
-        // ---- FIX: Use issueSignedToken to get delegation token ----
-        const { clientSigningToken, delegationToken } = await issueSignedToken({token: BLOB_READ_WRITE_TOKEN, operations: ['put']});
-
-        const { presignedUrl } = await presignUrl(
-          { clientSigningToken, delegationToken },
-          {
-            pathname,
-            operation: 'put',
-            validUntil: Date.now() + 15 * 60 * 1000,
-          }
-        );
-
-        const blobUrl = presignedUrl.split('?')[0];
-        return res.status(200).json({ presignedUrl, blobUrl, pathname });
-      } catch (error) {
-        console.error('Error generating presigned URL:', error);
-        return res.status(500).json({ error: error.message });
-      }
+    if (!filename) {
+      return res.status(400).json({ error: 'filename is required' });
     }
+
+    const pathname = `uploads/${category}/${filename}`;
+
+    const { clientSigningToken, delegationToken } = await issueSignedToken({
+      token: BLOB_READ_WRITE_TOKEN,
+      operations: ['put']
+    });
+
+    const { presignedUrl } = await presignUrl(
+      { clientSigningToken, delegationToken },
+      {
+        pathname,
+        operation: 'put',
+        validUntil: Date.now() + 15 * 60 * 1000,
+      }
+    );
+
+    // Construct the actual public blob URL
+    const blobUrl = `https://${BLOB_STORE_ID}.public.blob.vercel-storage.com/${pathname}`;
+
+    return res.status(200).json({ presignedUrl, blobUrl, pathname });
+  } catch (error) {
+    console.error('Error generating presigned URL:', error);
+    return res.status(500).json({ error: error.message });
+  }
+}
 
     // --- Normal or chunked upload (existing logic) ---
     const form = new IncomingForm();
