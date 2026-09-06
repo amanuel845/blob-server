@@ -425,71 +425,84 @@ function showTestModal(message, isSuccess = true) {
       },
 
       populateTable(blobs) {
-        const d = this.d;
-        const tbody = d.fileTableBody;
-        const emptyMsg = d.fileTableEmpty;
-        if (!tbody) return;
+  const d = this.d;
+  const tbody = d.fileTableBody;
+  const emptyMsg = d.fileTableEmpty;
+  if (!tbody) return;
 
-        if (!blobs || blobs.length === 0) {
-          tbody.innerHTML = '';
-          if (emptyMsg) emptyMsg.style.display = 'block';
-          return;
-        }
-        if (emptyMsg) emptyMsg.style.display = 'none';
+  if (!blobs || blobs.length === 0) {
+    tbody.innerHTML = '';
+    if (emptyMsg) emptyMsg.style.display = 'block';
+    return;
+  }
+  if (emptyMsg) emptyMsg.style.display = 'none';
 
-        // Sort the blobs
-        const sorted = this.sortBlobs(blobs);
+  const sorted = this.sortBlobs(blobs);
+  tbody.innerHTML = '';
 
-        tbody.innerHTML = '';
-        sorted.forEach(blob => {
-          const tr = document.createElement('tr');
-          const displayName = helper.getDisplayName(blob.pathname);
+  sorted.forEach(blob => {
+    const tr = document.createElement('tr');
+    const displayName = helper.getDisplayName(blob.pathname);
 
-          const tdName = document.createElement('td');
-          tdName.className = 'truncate';
-          tdName.textContent = displayName;
-          tr.appendChild(tdName);
+    // ---- Filename column with icon ----
+    const tdName = document.createElement('td');
+    tdName.className = 'flex items-center gap-1 overflow-hidden';
 
-          const tdSize = document.createElement('td');
-          tdSize.className = 'text-center';
-          tdSize.textContent = helper.fmtSize(blob.size);
-          tr.appendChild(tdSize);
+    const iconSpan = document.createElement('span');
+    iconSpan.className = `fa-regular ${helper.getFileIcon(blob.pathname)} text-cyan-300 text-[10px] flex-shrink-0`;
+    tdName.appendChild(iconSpan);
 
-          const tdView = document.createElement('td');
-          tdView.className = 'col-action';
-          const btnView = document.createElement('button');
-          btnView.className = 'action-btn text-cyan-300 hover:text-cyan-200';
-          btnView.innerHTML = '<i class="fa-regular fa-eye"></i>';
-          btnView.title = 'View file';
-          btnView.addEventListener('click', () => this.loadFile(blob.url));
-          tdView.appendChild(btnView);
-          tr.appendChild(tdView);
+    const textSpan = document.createElement('span');
+    textSpan.className = 'truncate';
+    textSpan.textContent = displayName;
+    tdName.appendChild(textSpan);
 
-          const tdDownload = document.createElement('td');
-          tdDownload.className = 'col-action';
-          const btnDownload = document.createElement('button');
-          btnDownload.className = 'action-btn text-green-300 hover:text-green-200';
-          btnDownload.innerHTML = '<i class="fa-solid fa-download"></i>';
-          btnDownload.title = 'Download file';
-          btnDownload.addEventListener('click', () => { window.open(blob.url, '_blank'); });
-          tdDownload.appendChild(btnDownload);
-          tr.appendChild(tdDownload);
+    tr.appendChild(tdName);
 
-          const tdDelete = document.createElement('td');
-          tdDelete.className = 'col-action';
-          const btnDelete = document.createElement('button');
-          btnDelete.className = 'action-btn delete text-red-300 hover:text-red-200';
-          btnDelete.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
-          btnDelete.title = 'Delete file';
-          btnDelete.addEventListener('click', () => this.deleteBlob(blob.pathname, blob.url));
-          tdDelete.appendChild(btnDelete);
-          tr.appendChild(tdDelete);
+    // ---- Size ----
+    const tdSize = document.createElement('td');
+    tdSize.className = 'text-center';
+    tdSize.textContent = helper.fmtSize(blob.size);
+    tr.appendChild(tdSize);
 
-          tbody.appendChild(tr);
-        });
+    // ---- View ----
+    const tdView = document.createElement('td');
+    tdView.className = 'col-action';
+    const btnView = document.createElement('button');
+    btnView.className = 'action-btn text-cyan-300 hover:text-cyan-200';
+    btnView.innerHTML = '<i class="fa-regular fa-eye"></i>';
+    btnView.title = 'View file';
+    btnView.addEventListener('click', () => this.loadFile(blob.url));
+    tdView.appendChild(btnView);
+    tr.appendChild(tdView);
 
-        this.updateSortIndicators();
-      },
+    // ---- Download ----
+    const tdDownload = document.createElement('td');
+    tdDownload.className = 'col-action';
+    const btnDownload = document.createElement('button');
+    btnDownload.className = 'action-btn text-green-300 hover:text-green-200';
+    btnDownload.innerHTML = '<i class="fa-solid fa-download"></i>';
+    btnDownload.title = 'Download file';
+    btnDownload.addEventListener('click', () => { window.open(blob.url, '_blank'); });
+    tdDownload.appendChild(btnDownload);
+    tr.appendChild(tdDownload);
+
+    // ---- Delete ----
+    const tdDelete = document.createElement('td');
+    tdDelete.className = 'col-action';
+    const btnDelete = document.createElement('button');
+    btnDelete.className = 'action-btn delete text-red-300 hover:text-red-200';
+    btnDelete.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
+    btnDelete.title = 'Delete file';
+    btnDelete.addEventListener('click', () => this.deleteBlob(blob.pathname, blob.url));
+    tdDelete.appendChild(btnDelete);
+    tr.appendChild(tdDelete);
+
+    tbody.appendChild(tr);
+  });
+
+  this.updateSortIndicators();
+},
 
       async loadFile(url) {
         const d = this.d;
