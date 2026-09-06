@@ -137,6 +137,17 @@
     }
     .action-btn:hover { background: rgba(6, 182, 212, 0.2); transform: scale(1.1); }
     .action-btn.delete:hover { color: #f87171; background: rgba(248, 113, 113, 0.2); }
+    #deletion-spinner {
+  transition: opacity 0.3s ease;
+}
+#deletion-spinner.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#deletion-spinner:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
   </style>
 </head>
 <body class="h-full overflow-hidden flex flex-col bg-[#0d1a1f] text-[#e5e7eb] antialiased">
