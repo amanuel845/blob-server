@@ -149,16 +149,42 @@
   pointer-events: auto;
 }
     /* For table */
-#file-table-body td .fa-regular {
-  width: 1.2em;
-  text-align: center;
-  font-size: 0.75rem;
+/* ---- Filename cell in table (icon + text) ---- */
+#file-table-body td:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  overflow: hidden;
 }
-/* For dropdown */
+
+/* ---- Dropdown options (icon + text) ---- */
+.custom-select-option {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 0.75rem;
+  overflow: hidden;
+}
+
+/* ---- Icons in both places ---- */
+#file-table-body td:first-child .fa-regular,
 .custom-select-option .fa-regular {
   width: 1.2em;
   text-align: center;
   font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+/* ---- Truncated text in both ---- */
+#file-table-body td:first-child .truncate,
+.custom-select-option .truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
   </style>
 </head>
