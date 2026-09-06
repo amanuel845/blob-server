@@ -20,12 +20,16 @@
     // Code pane
     fileSelect: document.getElementById('fileSelect'),
     conn: document.getElementById('conn'),
-    testResult: document.getElementById('test-result'),
     testConnectionBtn: document.getElementById('test-connection-btn'),
     jsonPre: document.getElementById('json'),
     jsonLoader: document.getElementById('jsonLoader'),
     jsonLoadingIndicator: document.getElementById('json-loading-indicator'),
-    
+
+    // Test modal
+testModal: document.getElementById('test-modal'),
+testModalIcon: document.getElementById('test-modal-icon'),
+testModalMessage: document.getElementById('test-modal-message'),
+testModalOkBtn: document.getElementById('test-modal-ok-btn'),
     // TikTok pane
     dropZone: document.getElementById('drop-zone'),
     fileInput: document.getElementById('file-input'),
