@@ -369,60 +369,69 @@ function showTestModal(message, isSuccess = true) {
 
       // ---- Populate dropdown & table ----
       async populateFileSelect() {
-        const d = this.d;
-        if (!this.uploader) return;
+  const d = this.d;
+  if (!this.uploader) return;
 
-        if (d.fileSelect) {
-          const valueSpan = d.customSelectValue;
-          const optionsContainer = d.customSelectOptions;
-          valueSpan.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Loading…';
-          d.fileSelect.classList.add('disabled');
-          optionsContainer.innerHTML = '<div class="custom-select-option disabled">Loading files…</div>';
+  if (d.fileSelect) {
+    const valueSpan = d.customSelectValue;
+    const optionsContainer = d.customSelectOptions;
+    valueSpan.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Loading…';
+    d.fileSelect.classList.add('disabled');
+    optionsContainer.innerHTML = '<div class="custom-select-option disabled">Loading files…</div>';
 
-          try {
-            const blobs = await this.uploader.listBlobs();
-            this.cachedBlobs = blobs; // store for sorting
+    try {
+      const blobs = await this.uploader.listBlobs();
+      this.cachedBlobs = blobs; // store for sorting
 
-            if (d.conn) d.conn.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
-            
+      if (d.conn) d.conn.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
 
-            optionsContainer.innerHTML = '';
-            blobs.forEach(blob => {
-              const option = document.createElement('div');
-              option.className = 'custom-select-option';
-              option.dataset.value = blob.url;
-              option.dataset.pathname = blob.pathname;
-              option.textContent = helper.getDisplayName(blob.pathname);
-              option.addEventListener('click', () => {
-                valueSpan.textContent = option.textContent;
-                d.fileSelect.dataset.value = blob.url;
-                d.fileSelect.classList.remove('open');
-                optionsContainer.classList.add('hidden');
-                const event = new CustomEvent('change');
-                d.fileSelect.dispatchEvent(event);
-              });
-              optionsContainer.appendChild(option);
-            });
+      optionsContainer.innerHTML = '';
+      blobs.forEach(blob => {
+        const option = document.createElement('div');
+        option.className = 'custom-select-option flex items-center gap-1';
+        option.dataset.value = blob.url;
+        option.dataset.pathname = blob.pathname;
 
-            if (blobs.length === 0) valueSpan.textContent = 'No files';
-            else valueSpan.textContent = 'Select File';
-            d.fileSelect.classList.remove('disabled');
+        // Icon
+        const iconSpan = document.createElement('span');
+        iconSpan.className = `fa-regular ${helper.getFileIcon(blob.pathname)} text-cyan-300 text-[10px] flex-shrink-0`;
+        option.appendChild(iconSpan);
 
-            this.populateTable(blobs);
+        // Display name
+        const textSpan = document.createElement('span');
+        textSpan.className = 'truncate';
+        textSpan.textContent = helper.getDisplayName(blob.pathname);
+        option.appendChild(textSpan);
 
-          } catch (err) {
-            console.error('Failed to load file list:', err);
-            if (d.conn) d.conn.className = 'w-1.5 h-1.5 rounded-full bg-red-800 animate-pulse';
-            
-            valueSpan.textContent = '❌ Error';
-            optionsContainer.innerHTML = `<div class="custom-select-option disabled">${err.message}</div>`;
-            d.fileSelect.classList.remove('disabled');
-            if (d.fileTableBody) {
-              d.fileTableBody.innerHTML = `<tr><td colspan="4" class="text-center text-red-400 py-2">${err.message}</td></tr>`;
-            }
-          }
-        }
-      },
+        option.addEventListener('click', () => {
+          valueSpan.textContent = helper.getDisplayName(blob.pathname);
+          d.fileSelect.dataset.value = blob.url;
+          d.fileSelect.classList.remove('open');
+          optionsContainer.classList.add('hidden');
+          const event = new CustomEvent('change');
+          d.fileSelect.dispatchEvent(event);
+        });
+        optionsContainer.appendChild(option);
+      });
+
+      if (blobs.length === 0) valueSpan.textContent = 'No files';
+      else valueSpan.textContent = 'Select File';
+      d.fileSelect.classList.remove('disabled');
+
+      this.populateTable(blobs);
+
+    } catch (err) {
+      console.error('Failed to load file list:', err);
+      if (d.conn) d.conn.className = 'w-1.5 h-1.5 rounded-full bg-red-800 animate-pulse';
+      valueSpan.textContent = '❌ Error';
+      optionsContainer.innerHTML = `<div class="custom-select-option disabled">${err.message}</div>`;
+      d.fileSelect.classList.remove('disabled');
+      if (d.fileTableBody) {
+        d.fileTableBody.innerHTML = `<tr><td colspan="4" class="text-center text-red-400 py-2">${err.message}</td></tr>`;
+      }
+    }
+  }
+},
 
       populateTable(blobs) {
   const d = this.d;
