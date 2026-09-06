@@ -384,10 +384,7 @@ function showTestModal(message, isSuccess = true) {
             this.cachedBlobs = blobs; // store for sorting
 
             if (d.conn) d.conn.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
-            if (d.testResult) {
-              d.testResult.textContent = 'Connected!';
-              d.testResult.className = 'hidden text-[9px] text-green-400';
-            }
+            
 
             optionsContainer.innerHTML = '';
             blobs.forEach(blob => {
