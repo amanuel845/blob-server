@@ -3,6 +3,52 @@
 
     const d = window.dom;
 
+    function closeTestModal() {
+  const el = d.testModal;
+  el.classList.add('hidden', 'opacity-0');
+  el.classList.remove('flex', 'opacity-100');
+  const box = el.querySelector('.modal-box');
+  if (box) {
+    box.classList.remove('scale-100', 'translate-y-0');
+    box.classList.add('scale-95', 'translate-y-2');
+  }
+}
+
+function showTestModal(message, isSuccess = true) {
+  const el = d.testModal;
+  const icon = d.testModalIcon.querySelector('i');
+  const msgEl = d.testModalMessage;
+
+  msgEl.textContent = message;
+  icon.className = isSuccess ? 'fa-regular fa-circle-check' : 'fa-solid fa-triangle-exclamation';
+  // Optional: change icon color via parent or inline style
+  // We can set a class on the icon's parent
+  const iconContainer = d.testModalIcon;
+  if (isSuccess) {
+    iconContainer.style.color = '#34d399'; // emerald-400
+  } else {
+    iconContainer.style.color = '#f87171'; // red-400
+  }
+
+  el.classList.remove('hidden', 'opacity-0');
+  el.classList.add('flex', 'opacity-100');
+  const box = el.querySelector('.modal-box');
+  if (box) {
+    box.classList.remove('scale-95', 'translate-y-2');
+    box.classList.add('scale-100', 'translate-y-0');
+  }
+
+  // Set OK button to close
+  d.testModalOkBtn.onclick = function() {
+    closeTestModal();
+  };
+  // Click outside to close
+  el.onclick = function(e) {
+    if (e.target === el) {
+      closeTestModal();
+    }
+  };
+}
     // ---- Custom modal functions ----
     function closeAlert() {
       const el = d.alertEl;
