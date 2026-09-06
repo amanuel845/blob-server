@@ -587,29 +587,24 @@ function showTestModal(message, isSuccess = true) {
       },
 
       async testConnection() {
-        const d = this.d;
-        const testResultSpan = d.testResult;
-        const conn = d.conn;
-        testResultSpan.textContent = 'Testing...';
-        testResultSpan.className = 'hidden text-[9px] text-cyan-300';
-        try {
-          const storedKey = AuthModule.getStoredKey(AuthModule.config.storageKey);
-          if (!storedKey) throw new Error('No API key. Please unlock first.');
-          const url = `${AuthModule.config.apiBase}${AuthModule.config.blobdbEndpoint}?limit=1`;
-          const res = await fetch(url, {
-            headers: { 'Authorization': 'Bearer ' + storedKey }
-          });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const data = await res.json();
-          testResultSpan.textContent = `Connected! Store: ${data.storeId || 'N/A'}`;
-          conn.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
-          testResultSpan.className = 'hidden text-[9px] text-green-400';
-        } catch (err) {
-          testResultSpan.textContent = 'Connection failed: ' + err.message;
-          testResultSpan.className = 'hidden text-[9px] text-red-400';
-          conn.className = 'w-1.5 h-1.5 rounded-full bg-red-800 animate-pulse';
-        }
-      },
+  const d = this.d;
+  const conn = d.conn;
+  try {
+    const authKey = this.uploader.getApiKey();
+    if (!authKey) throw new Error('No API key. Please unlock first.');
+    const url = `${AuthModule.config.apiBase}${AuthModule.config.blobdbEndpoint}?limit=1`;
+    const res = await fetch(url, {
+      headers: { 'Authorization': 'Bearer ' + authKey }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    conn.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+    showTestModal('✅ Connected! Store: ' + (data.storeId || 'N/A'), true);
+  } catch (err) {
+    conn.className = 'w-1.5 h-1.5 rounded-full bg-red-800 animate-pulse';
+    showTestModal('❌ Connection failed: ' + err.message, false);
+  }
+},
 
       // ---- Init ----
       init() {
