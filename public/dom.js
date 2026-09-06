@@ -10,7 +10,7 @@
     // Main
     pageTitle: document.getElementById('page-title'),
     contentDesc: document.getElementById('content-desc'),
-    
+    uploadCategoryInput: document.getElementById('upload-category-input'),
     // Tabs
     tabCode: document.getElementById('tab-code'),
     tabTiktok: document.getElementById('tab-tiktok'),
