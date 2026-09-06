@@ -171,7 +171,6 @@
             <div class="bg-[#1a2e36] rounded-lg p-0.5 w-full mb-1 text-[9px] shadow-xl border border-cyan-400/30 overflow-visible text-cyan-300 flex items-center gap-2 border-b border-white/10 flex-nowrap min-w-0">
               <div class="flex gap-2">
                 <button id="test-connection-btn" class="bg-cyan-800/50 hover:bg-cyan-700 text-white px-2 py-0.5 rounded text-[9px] border border-cyan-600/30 transition-colors"><i class="fa-solid fa-link mr-1"></i> Test</button>
-                <span id="test-result" class="text-[9px] text-cyan-300 self-center hidden"></span>
               </div>
               <div class="flex-1 flex items-center h-full">
                 <div id="fileSelect" class="custom-select disabled">
@@ -328,6 +327,19 @@
       </div>
     </div>
   </div>
+
+  <!-- TEST RESULT MODAL -->
+<div id="test-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center opacity-0 transition-opacity duration-250">
+  <div class="modal-box bg-[#0d1a1f]/85 backdrop-blur-xl border border-cyan-400/30 rounded-2xl p-6 max-w-[400px] w-[90%] shadow-2xl scale-95 translate-y-2 transition-all duration-250 text-center">
+    <div class="text-4xl mb-2" id="test-modal-icon">
+      <i class="fa-solid fa-circle-info"></i>
+    </div>
+    <div id="test-modal-message" class="text-gray-200 text-[11px] font-medium mb-3">Test result</div>
+    <div class="flex gap-3 justify-center flex-wrap">
+      <button id="test-modal-ok-btn" class="cursor-pointer px-4 py-1 rounded-full text-[10px] font-semibold min-w-[60px] bg-[#057c94] hover:bg-[#046a80] text-white transition-all duration-200 hover:scale-105 active:scale-95">OK</button>
+    </div>
+  </div>
+</div>
 
   <!-- SCRIPTS -->
   <script src="dom.js"></script>
