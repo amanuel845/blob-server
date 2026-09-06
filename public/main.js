@@ -520,6 +520,7 @@ function showTestModal(message, isSuccess = true) {
         if (!pathname) return;
         const displayName = helper.getDisplayName(pathname);
         showConfirm(`Delete "${displayName}"?`, async () => {
+          d.deletionSpinner.classList.remove("hidden");
           try {
             await this.uploader.deleteBlob(pathname);
             await this.populateFileSelect();
@@ -531,6 +532,7 @@ function showTestModal(message, isSuccess = true) {
               d.fileSelect.dataset.value = '';
               d.customSelectValue.textContent = 'Select File';
             }
+            d.deletionSpinner.classList.add("hidden");
             showAlert('File deleted successfully');
           } catch (err) {
             console.error('Delete failed:', err);
