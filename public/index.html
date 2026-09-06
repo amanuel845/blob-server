@@ -10,71 +10,73 @@
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
   <style>
-    *::-webkit-scrollbar { width: 0; height: 0; background: transparent; }
-    * { scrollbar-width: none; -ms-overflow-style: none; }
-    .clock-colon { animation: colon-blink 1s step-start infinite; }
-    @keyframes colon-blink { 50% { opacity: 0; } }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    .slideshow-loader i { animation: spin 1s linear infinite; }
-    #unlock-modal { transition: opacity 0.3s ease; }
-    #unlock-modal.hidden { opacity: 0; pointer-events: none; }
-    #unlock-modal:not(.hidden) { opacity: 1; pointer-events: auto; }
-    #unlock-modal:not(.hidden) .modal-box { opacity: 1; transform: scale(1) translateY(0); }
-    #unlock-modal.hidden .modal-box { opacity: 0; transform: scale(0.95) translateY(8px); }
-    #custom-alert, #custom-confirm { transition: opacity 0.25s ease; }
-    #custom-alert .modal-box, #custom-confirm .modal-box { transition: all 0.25s ease; }
-    .custom-select { position: relative; width: 170px; max-width: 170px; }
-    .custom-select-trigger {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0.25rem 0.5rem;
-      background-color: #1a2e36;
-      color: #e5e7eb;
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      border-radius: 0.375rem;
-      cursor: pointer;
-      font-size: 0.75rem;
-      line-height: 1rem;
-    }
-    .custom-select-trigger:hover { border-color: rgba(6, 182, 212, 0.7); }
-    .custom-select-arrow { width: 0.75rem; height: 0.75rem; color: #06b6d4; transition: transform 0.2s ease; }
-    .custom-select.open .custom-select-arrow { transform: rotate(180deg); }
-    .custom-select-options {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      max-height: 200px;
-      overflow-y: auto;
-      background-color: #0d1a1f;
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      border-radius: 0.375rem;
-      margin-top: 0.25rem;
-      z-index: 50;
-    }
-    .custom-select-option { padding: 0.25rem 0.5rem; color: #e5e7eb; cursor: pointer; font-size: 0.75rem; }
-    .custom-select-option:hover { background-color: rgba(6, 182, 212, 0.2); }
-    .custom-select-option.selected { background-color: rgba(6, 182, 212, 0.3); }
-    .custom-select-options { z-index: 1000; }
-    .custom-select.disabled .custom-select-trigger {
-      opacity: 0.6;
-      cursor: not-allowed;
-      pointer-events: none;
-      border-color: rgba(6, 182, 212, 0.15);
-      background-color: #16242a;
-      color: #7b8a90;
-    }
-    .custom-select-option.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background-color: transparent;
-      pointer-events: none;
-    }
-#file-table {
+  *::-webkit-scrollbar { width: 0; height: 0; background: transparent; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .clock-colon { animation: colon-blink 1s step-start infinite; }
+  @keyframes colon-blink { 50% { opacity: 0; } }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+  .slideshow-loader i { animation: spin 1s linear infinite; }
+  #unlock-modal { transition: opacity 0.3s ease; }
+  #unlock-modal.hidden { opacity: 0; pointer-events: none; }
+  #unlock-modal:not(.hidden) { opacity: 1; pointer-events: auto; }
+  #unlock-modal:not(.hidden) .modal-box { opacity: 1; transform: scale(1) translateY(0); }
+  #unlock-modal.hidden .modal-box { opacity: 0; transform: scale(0.95) translateY(8px); }
+  #custom-alert, #custom-confirm { transition: opacity 0.25s ease; }
+  #custom-alert .modal-box, #custom-confirm .modal-box { transition: all 0.25s ease; }
+
+  .custom-select { position: relative; width: 170px; max-width: 170px; }
+  .custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    background-color: #1a2e36;
+    color: #e5e7eb;
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  .custom-select-trigger:hover { border-color: rgba(6, 182, 212, 0.7); }
+  .custom-select-arrow { width: 0.75rem; height: 0.75rem; color: #06b6d4; transition: transform 0.2s ease; }
+  .custom-select.open .custom-select-arrow { transform: rotate(180deg); }
+  .custom-select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #0d1a1f;
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.375rem;
+    margin-top: 0.25rem;
+    z-index: 50;
+  }
+  .custom-select-option { padding: 0.25rem 0.5rem; color: #e5e7eb; cursor: pointer; font-size: 0.75rem; }
+  .custom-select-option:hover { background-color: rgba(6, 182, 212, 0.2); }
+  .custom-select-option.selected { background-color: rgba(6, 182, 212, 0.3); }
+  .custom-select-options { z-index: 1000; }
+  .custom-select.disabled .custom-select-trigger {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    border-color: rgba(6, 182, 212, 0.15);
+    background-color: #16242a;
+    color: #7b8a90;
+  }
+  .custom-select-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: transparent;
+    pointer-events: none;
+  }
+
+  #file-table {
   width: 100%;
-  table-layout: auto;          /* let columns size naturally */
+  table-layout: fixed;
   border-collapse: collapse;
 }
 
@@ -85,79 +87,57 @@
   white-space: nowrap;
 }
 
-/* Filename – flexible but capped */
-#file-table .col-filename {
-  max-width: 150px;
-  min-width: 80px;
+#file-table th:first-child,
+#file-table td:first-child {
+  width: 20px;
+  min-width: 20px;
+  max-width: 20px;
+  padding: 0.1rem 0.2rem;
+  text-align: center;
 }
 
-/* Size – fixed 80px */
+#file-table td:nth-child(2) {
+  width: 120px;
+  max-width: 120px;
+  min-width: 120px;
+  padding: 0.1rem 0.3rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 #file-table .col-size {
-  width: 80px;
+  width: 50px;
+  max-width: 50px;
+  min-width: 50px;
   text-align: center;
 }
 
-/* Action columns – fixed 70px each */
 #file-table .col-action {
-  width: 70px;
+  width: 40px;
+  max-width: 40px;
+  min-width: 40px;
   text-align: center;
 }
-/* Existing styles (already present) */
-#file-table-body tr:hover {
-  background-color: rgba(6, 182, 212, 0.1);
-}
 
+#file-table-body tr:hover { background-color: rgba(6, 182, 212, 0.1); }
 #file-table-body td {
   padding: 0.2rem 0.3rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+#file-table-body tr:nth-child(odd) { background-color: rgba(255,255,255,0.03); }
+#file-table-body tr:nth-child(even) { background-color: rgba(255,255,255,0.08); }
+#file-table-body tr:hover { background-color: rgba(6, 182, 212, 0.15); }
+
+#file-table td:nth-child(2) .fa-regular {
+  display: inline-block;
+  width: 1.2em;
+  text-align: center;
+  font-size: 0.7rem;
+  margin-right: 0.25rem;
+  flex-shrink: 0;
 }
 
-/* New – odd/even row striping */
-#file-table-body tr:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.03);
-}
-
-#file-table-body tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-/* Hover overrides striping – keep it subtle */
-#file-table-body tr:hover {
-  background-color: rgba(6, 182, 212, 0.15); /* slightly stronger than before */
-}
-
-.action-btn {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 0.1rem 0.3rem;
-      font-size: 0.7rem;
-      border-radius: 0.2rem;
-      transition: all 0.2s ease;
-    }
-    .action-btn:hover { background: rgba(6, 182, 212, 0.2); transform: scale(1.1); }
-    .action-btn.delete:hover { color: #f87171; background: rgba(248, 113, 113, 0.2); }
-    #deletion-spinner {
-  transition: opacity 0.3s ease;
-}
-#deletion-spinner.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-#deletion-spinner:not(.hidden) {
-  opacity: 1;
-  pointer-events: auto;
-}
-    /* For table */
-/* ---- Filename cell in table (icon + text) ---- */
-#file-table-body td:first-child {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  overflow: hidden;
-}
-
-/* ---- Dropdown options (icon + text) ---- */
 .custom-select-option {
   display: flex;
   align-items: center;
@@ -168,40 +148,102 @@
   font-size: 0.75rem;
   overflow: hidden;
 }
-
-/* ---- Icons in both places ---- */
-#file-table-body td:first-child .fa-regular,
 .custom-select-option .fa-regular {
+  flex-shrink: 0;
   width: 1.2em;
   text-align: center;
   font-size: 0.7rem;
-  flex-shrink: 0;
 }
-
-/* ---- Truncated text in both ---- */
-#file-table-body td:first-child .truncate,
 .custom-select-option .truncate {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-  </style>
+
+#file-table input[type="checkbox"] {
+  accent-color: #06b6d4;
+  width: 0.75rem;
+  height: 0.75rem;
+  cursor: pointer;
+  background-color: #1a2e36;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 0.125rem;
+  flex-shrink: 0;
+}
+
+  .custom-select-option {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    color: #e5e7eb;
+    cursor: pointer;
+    font-size: 0.75rem;
+    overflow: hidden;
+  }
+  .custom-select-option .fa-regular {
+    flex-shrink: 0;
+    width: 1.2em;
+    text-align: center;
+    font-size: 0.7rem;
+  }
+  .custom-select-option .truncate {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.1rem 0.3rem;
+    font-size: 0.7rem;
+    border-radius: 0.2rem;
+    transition: all 0.2s ease;
+  }
+  .action-btn:hover { background: rgba(6, 182, 212, 0.2); transform: scale(1.1); }
+  .action-btn.delete:hover { color: #f87171; background: rgba(248, 113, 113, 0.2); }
+
+  #deletion-spinner { transition: opacity 0.3s ease; }
+  #deletion-spinner.hidden { opacity: 0; pointer-events: none; }
+  #deletion-spinner:not(.hidden) { opacity: 1; pointer-events: auto; }
+
+  /*
+  @media (max-width: 640px) {
+    .custom-select { width: 120px; max-width: 120px; }
+    #file-table th, #file-table td { font-size: 8px; padding: 0.1rem 0.15rem; }
+    .action-btn { font-size: 0.6rem; padding: 0.05rem 0.15rem; }
+    #tab-bar .tab-btn { font-size: 9px; }
+    #file-table .col-size { width: 50px; }
+    #file-table .col-action { width: 40px; }
+    #file-table th:first-child, #file-table td:first-child { width: 24px; min-width: 24px; max-width: 24px; }
+    #file-table td:nth-child(2) { max-width: 80px; min-width: 40px; }
+    #pagination-container .flex { flex-wrap: wrap; justify-content: center; gap: 4px; }
+    .modal-box { padding: 1rem; }
+  }
+  */
+</style>
 </head>
 <body class="h-full overflow-hidden flex flex-col bg-[#0d1a1f] text-[#e5e7eb] antialiased">
 
-  <!-- HEADER -->
   <header class="flex-shrink-0 h-9 bg-[#0d1a1f] text-white shadow-[0_2px_10px_rgba(1,74,96,0.5)] flex items-center justify-between px-2 z-20 border-b border-[#1a3a42]">
     <div class="flex items-center gap-1.5">
       <i class="fa-brands fa-tiktok text-[16px] text-cyan-400"></i>
       <span class="font-['Poppins',sans-serif] font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-cyan-200 tracking-wide drop-shadow-[0_0_8px_rgba(6,182,212,0.5)] text-[15px]">TikTok JSON Uploader</span>
     </div>
     <div class="flex items-center gap-1.5">
-      <button id="exit-btn" class="bg-cyan-800/50 hover:bg-cyan-700 text-white px-1.5 py-0.5 rounded border border-cyan-600/30 transition-colors text-[12px]"><i class="fa-solid fa-right-from-bracket w-3.5 text-center text-[14px]"></i> <span>Exit</span></button>
+      <button id="lock-btn" class="bg-cyan-800/50 hover:bg-cyan-700 text-white px-1.5 py-0.5 rounded border border-cyan-600/30 transition-colors text-[12px]">
+        <i class="fa-solid fa-lock w-3.5 text-center text-[14px]"></i> <span>Lock</span>
+      </button>
+      <button id="exit-btn" class="bg-cyan-800/50 hover:bg-cyan-700 text-white px-1.5 py-0.5 rounded border border-cyan-600/30 transition-colors text-[12px]">
+        <i class="fa-solid fa-right-from-bracket w-3.5 text-center text-[14px]"></i> <span>Exit</span>
+      </button>
     </div>
   </header>
 
-  <!-- MAIN -->
   <main class="flex-1 overflow-hidden flex flex-col p-2 gap-1 relative bg-transparent min-h-0">
     <div id="content-header" class="flex-shrink-0 flex items-center justify-between border-b border-white/5 px-2 mb-0.5">
       <div>
@@ -209,12 +251,16 @@
         <p id="content-desc" class="text-cyan-100/70 text-[8px] mt-0.5 drop-shadow">JSON Data Blob Manager</p>
       </div>
       <div class="flex items-center gap-2">
-        <button id="refresh-btn" class="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-2 py-1 rounded border border-white/20 transition-colors flex items-center gap-1 shadow-md"><i class="fa-solid fa-rotate text-[8px]"></i> <span class="hidden sm:inline text-[9px]">Refresh</span></button>
+        <button id="delete-selected-btn" class="bg-red-700/50 hover:bg-red-700 text-white px-2 py-0.5 rounded text-[9px] border border-red-600/30 transition-colors">
+          <i class="fa-regular fa-trash-can mr-1"></i> Delete Selected
+        </button>
+        <button id="refresh-btn" class="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-2 py-1 rounded border border-white/20 transition-colors flex items-center gap-1 shadow-md">
+          <i class="fa-solid fa-rotate text-[8px]"></i> <span class="hidden sm:inline text-[9px]">Refresh</span>
+        </button>
       </div>
     </div>
     <div class="bg-[#1a2e36] rounded-lg p-1 w-full flex-1 shadow-xl border border-cyan-400/30 overflow-hidden flex flex-col">
       <div id="tab-container" class="flex-1 overflow-hidden min-h-0 relative">
-        <!-- Code pane -->
         <div id="tab-pane-code" class="h-full min-h-0 overflow-hidden flex flex-col">
           <div class="flex flex-col gap-2 p-1 h-full overflow-hidden">
             <div class="bg-[#1a2e36] rounded-lg p-0.5 w-full mb-1 text-[9px] shadow-xl border border-cyan-400/30 overflow-visible text-cyan-300 flex items-center gap-2 border-b border-white/10 flex-nowrap min-w-0">
@@ -247,119 +293,130 @@
             </div>
           </div>
         </div>
-                <!-- TikTok pane -->
-<div id="tab-pane-tiktok" class="h-full min-h-0 overflow-hidden flex flex-col hidden">
-<div class="flex flex-col gap-2 p-1 h-full overflow-hidden">
-<div class="flex-shrink-0 bg-[#0d1a1f] rounded p-1 border border-white/10 overflow-hidden min-h-0">
-<div id="drop-zone" class="w-full rounded-lg bg-white/5 backdrop-blur-sm border-2 border-dashed border-white/30 flex flex-col items-center justify-center p-4 text-center text-white/70 transition-colors cursor-pointer hover:border-cyan-400/50">
-<i class="fa-solid fa-cloud-upload-alt text-4xl text-cyan-300 mb-2"></i>
-<p class="text-[11px] font-medium">Drag & drop tiktok json here</p>
-<p class="text-[8px] text-white/50">or click to select files</p>
-<input type="file" id="file-input" accept="*/*" class="hidden" multiple />
-</div>
-<div class="w-full flex justify-between mt-2">
-<button id="upload-btn" class="bg-[#057c94] hover:bg-[#046a80] text-white px-3 py-1 rounded text-[10px] border border-cyan-600/30 transition-colors shadow-sm self-center flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-upload"></i> Upload</button>
-<div class="py-1 px-1 text-cyan-300 truncate font-mono flex-1">
-<input type="text" id="file-prefix" class="bg-transparent border border-cyan-500/30 rounded px-1 py-0.5 text-[10px] text-cyan-200 w-full font-mono focus:outline-none focus:border-cyan-400" value="jafernegery">
-</div>
-<button id="clear-btn" class="bg-white/10 hover:bg-white/20 text-white/80 px-3 py-1 rounded text-[10px] border border-white/10 transition-colors flex items-center gap-2"><i class="fa-solid fa-times"></i> Clear</button>
-</div>
-<div id="upload-progress" class="w-full max-w-xs mt-3 hidden">
-<div class="w-full bg-white/20 rounded-full h-1.5">
-<div id="progress-bar" class="bg-cyan-400 h-1.5 rounded-full transition-all duration-300" style="width:0%"></div>
-</div>
-<div class="w-full flex justify-between mt-2">
-<span id="progress-text" class="text-[8px] text-cyan-300">0%</span>
-<div>
-<span id="current-file-count" class="text-[8px] text-cyan-300">0</span>
-<span class="text-[8px] text-cyan-300">/</span>
-<span id="total-file-count" class="text-[8px] text-cyan-300">0</span>
-</div>
-<span id="speed-text" class="text-[8px] text-cyan-300">0</span>
-</div>
-</div>
 
-<div class="bg-[#1a2e36] rounded-lg p-0.5 w-full mb-1 text-[9px] shadow-xl border border-cyan-400/30 overflow-visible text-cyan-300 flex items-center gap-2 border-b border-white/10 flex-nowrap min-w-0">
-  <!-- Category input -->
-<div class="flex items-center gap-3 w-full px-2">
-<label class="text-[10px] text-cyan-300">Category:</label>
-<input type="text" id="upload-category-input" class="flex-1 bg-transparent border border-cyan-500/30 rounded px-1 py-0.5 text-[10px] text-cyan-200 w-[100px] font-mono focus:outline-none focus:border-cyan-400" value="json/tiktok" />
-</div>
-</div>
+        <div id="tab-pane-tiktok" class="h-full min-h-0 overflow-hidden flex flex-col hidden">
+          <div class="flex flex-col gap-2 p-1 h-full overflow-hidden">
+            <div class="flex-shrink-0 bg-[#0d1a1f] rounded p-1 border border-white/10 overflow-hidden min-h-0">
+              <div id="drop-zone" class="w-full rounded-lg bg-white/5 backdrop-blur-sm border-2 border-dashed border-white/30 flex flex-col items-center justify-center p-4 text-center text-white/70 transition-colors cursor-pointer hover:border-cyan-400/50">
+                <i class="fa-solid fa-cloud-upload-alt text-4xl text-cyan-300 mb-2"></i>
+                <p class="text-[11px] font-medium">Drag & drop tiktok json here</p>
+                <p class="text-[8px] text-white/50">or click to select files</p>
+                <input type="file" id="file-input" accept="*/*" class="hidden" multiple />
+              </div>
+              <div class="w-full flex justify-between mt-2">
+                <button id="upload-btn" class="bg-[#057c94] hover:bg-[#046a80] text-white px-3 py-1 rounded text-[10px] border border-cyan-600/30 transition-colors shadow-sm self-center flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-upload"></i> Upload</button>
+                <div class="py-1 px-1 text-cyan-300 truncate font-mono flex-1">
+                  <input type="text" id="file-prefix" class="bg-transparent border border-cyan-500/30 rounded px-1 py-0.5 text-[10px] text-cyan-200 w-full font-mono focus:outline-none focus:border-cyan-400" value="jafernegery">
+                </div>
+                <button id="clear-btn" class="bg-white/10 hover:bg-white/20 text-white/80 px-3 py-1 rounded text-[10px] border border-white/10 transition-colors flex items-center gap-2"><i class="fa-solid fa-times"></i> Clear</button>
+              </div>
+              <div id="upload-progress" class="w-full max-w-xs mt-3 hidden">
+                <div class="w-full bg-white/20 rounded-full h-1.5">
+                  <div id="progress-bar" class="bg-cyan-400 h-1.5 rounded-full transition-all duration-300" style="width:0%"></div>
+                </div>
+                <div class="w-full flex justify-between mt-2">
+                  <span id="progress-text" class="text-[8px] text-cyan-300">0%</span>
+                  <div>
+                    <span id="current-file-count" class="text-[8px] text-cyan-300">0</span>
+                    <span class="text-[8px] text-cyan-300">/</span>
+                    <span id="total-file-count" class="text-[8px] text-cyan-300">0</span>
+                  </div>
+                  <span id="speed-text" class="text-[8px] text-cyan-300">0</span>
+                  <button id="cancel-upload-btn" class="bg-red-700/50 hover:bg-red-700 text-white px-1.5 py-0.5 rounded text-[9px] border border-red-600/30 transition-colors hidden">Cancel</button>
+                </div>
+              </div>
+              <div class="bg-[#1a2e36] rounded-lg p-0.5 w-full mb-1 text-[9px] shadow-xl border border-cyan-400/30 overflow-visible text-cyan-300 flex items-center gap-2 border-b border-white/10 flex-nowrap min-w-0">
+                <div class="flex items-center gap-3 w-full px-2">
+                  <label class="text-[10px] text-cyan-300">Category:</label>
+                  <input type="text" id="upload-category-input" class="flex-1 bg-transparent border border-cyan-500/30 rounded px-1 py-0.5 text-[10px] text-cyan-200 w-[100px] font-mono focus:outline-none focus:border-cyan-400" value="json/tiktok" />
+                </div>
+              </div>
+            </div>
+            <div class="flex-1 flex-shrink-0 bg-[#0d1a1f] rounded p-1 border border-white/10 overflow-hidden min-h-0">
+              <div id="fileProperties" class="flex flex-col gap-1 bg-[#1a2e36] rounded-lg p-0.5 w-full mb-1 shadow-xl border border-cyan-400/30 overflow-hidden border-b border-white/10 flex-nowrap min-w-0 p-1 text-[9px]">
+                <div class="flex overflow-hidden gap-1">
+                  <span class="text-cyan-300">Name: </span>
+                  <span id="file-name" class="flex-1 text-white/300 border-b border-white/10">Original file name</span>
+                </div>
+                <div class="flex overflow-hidden gap-2">
+                  <div class="flex overflow-hidden gap-1">
+                    <span class="text-cyan-300">Size: </span>
+                    <span id="file-size" class="flex-1 text-white/300 border-b border-white/10">File size</span>
+                  </div>
+                  <div class="flex overflow-hidden gap-1">
+                    <span class="text-cyan-300">Date: </span>
+                    <span id="file-date" class="flex-1 text-white/300 border-b border-white/10">Last modified</span>
+                  </div>
+                  <div class="flex-1 flex overflow-hidden gap-1">
+                    <span class="text-cyan-300">Type: </span>
+                    <span id="file-type" class="flex-1 text-white/300 border-b border-white/10">File type</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-
-</div>
-<div class="flex-1 flex-shrink-0 bg-[#0d1a1f] rounded p-1 border border-white/10 overflow-hidden min-h-0">
-<div id="fileProperties" class="flex flex-col gap-1 bg-[#1a2e36] rounded-lg p-0.5 w-full mb-1 shadow-xl border border-cyan-400/30 overflow-hidden border-b border-white/10 flex-nowrap min-w-0 p-1 text-[9px]">
-<div class="flex overflow-hidden gap-1">
-<span class="text-cyan-300">Name: </span>
-<span id="file-name" class="flex-1 text-white/300 border-b border-white/10">Original file name</span>
-</div>
-<div class="flex overflow-hidden gap-2">
-<div class="flex overflow-hidden gap-1">
-<span class="text-cyan-300">Size: </span>
-<span id="file-size" class="flex-1 text-white/300 border-b border-white/10">File size</span>
-</div>
-<div class="flex overflow-hidden gap-1">
-<span class="text-cyan-300">Date: </span>
-<span id="file-date" class="flex-1 text-white/300 border-b border-white/10">Last modified</span>
-</div>
-<div class="flex-1 flex overflow-hidden gap-1">
-<span class="text-cyan-300">Type: </span>
-<span id="file-type" class="flex-1 text-white/300 border-b border-white/10">File type</span>
-</div>
-</div>
-</div>
-</div>
-
-</div>
-</div>
-        <!-- Files pane -->
         <div id="tab-pane-files" class="h-full min-h-0 overflow-hidden flex flex-col hidden">
           <div class="flex flex-col p-1 h-full overflow-hidden">
             <div class="flex-1 overflow-auto bg-[#0d1a1f] rounded border border-white/10 p-1">
 <table id="file-table" class="text-[10px]">
-  <colgroup>
-    <col class="col-filename" />
-    <col class="col-size" />
-    <col class="col-action" />
-    <col class="col-action" />
-    <col class="col-action" />
-  </colgroup>
   <thead class="sticky top-0 bg-[#1a2e36] text-cyan-200 font-semibold">
     <tr>
-      <th class="text-left p-1 cursor-pointer hover:text-white transition-colors" data-sort="name">
+      <th class="text-center p-0.5" style="width:20px;">
+        <input type="checkbox" id="select-all-rows" class="cursor-pointer w-3 h-3 accent-cyan-400" />
+      </th>
+      <th class="text-left p-1 cursor-pointer hover:text-white transition-colors" style="width:120px; min-width:120px; max-width:120px;" data-sort="name">
         File Name <span class="sort-arrow text-[8px] ml-1"></span>
       </th>
-      <th class="text-center p-1 cursor-pointer hover:text-white transition-colors" data-sort="size">
+      <th class="text-center p-1 cursor-pointer hover:text-white transition-colors" style="width:60px;" data-sort="size">
         Size <span class="sort-arrow text-[8px] ml-1"></span>
       </th>
-      <th class="text-center p-1">View</th>
-      <th class="text-center p-1">Download</th>
-      <th class="text-center p-1">Delete</th>
+      <th class="text-center p-1" style="width:40px;">View</th>
+      <th class="text-center p-1" style="width:40px;">Download</th>
+      <th class="text-center p-1" style="width:40px;">Delete</th>
     </tr>
   </thead>
   <tbody id="file-table-body"></tbody>
 </table>
-              
-              <div id="file-table-empty" class="text-center text-white/40 text-[11px] py-6">No files uploaded yet</div>
+
+<div id="file-table-empty" class="text-center text-white/40 text-[11px] py-6">No files uploaded yet</div>
+            </div>
+              <div id="pagination-container" class="mt-1 flex justify-center"></div>
+            
+          </div>
+        </div>
+
+        <div id="tab-pane-config" class="h-full min-h-0 overflow-hidden flex flex-col hidden">
+          <div class="flex flex-col p-2 h-full overflow-hidden">
+            <div class="flex-1 overflow-auto bg-[#0d1a1f] rounded border border-white/10 p-2">
+              <div id="config-container" class="text-[10px]"></div>
             </div>
           </div>
         </div>
       </div>
+
       <div id="tab-bar" class="flex-shrink-0 flex items-center justify-around border-t border-white/10 bg-white/5 backdrop-blur-sm rounded-t py-0.5 px-1 gap-1 mt-0.5 h-7">
-        <button id="tab-code" class="tab-btn flex-1 text-center py-0.5 text-white border-b-[1.5px] border-cyan-400 font-medium text-[12px] transition-colors" data-title="JSON data code"> <i class="fa-solid fa-video mr-1 text-[7px] text-cyan-300"></i><span>Code</span> </button>
-        <button id="tab-tiktok" class="tab-btn flex-1 text-center py-0.5 text-white/60 border-b-[1.5px] border-transparent hover:text-white hover:border-cyan-400/50 text-[12px] transition-colors" data-title="Tiktok json upload"> <i class="fa-brands fa-tiktok mr-1 text-[7px]"></i><span>TikTok</span> </button>
-        <button id="tab-files" class="tab-btn flex-1 text-center py-0.5 text-white/60 border-b-[1.5px] border-transparent hover:text-white hover:border-cyan-400/50 text-[12px] transition-colors" data-title="All files"> <i class="fa-regular fa-file mr-1 text-[7px]"></i><span>Files</span> </button>
+        <button id="tab-code" class="tab-btn flex-1 text-center py-0.5 text-white border-b-[1.5px] border-cyan-400 font-medium text-[12px] transition-colors" data-title="JSON data code">
+          <i class="fa-solid fa-video mr-1 text-[7px] text-cyan-300"></i><span>Code</span>
+        </button>
+        <button id="tab-tiktok" class="tab-btn flex-1 text-center py-0.5 text-white/60 border-b-[1.5px] border-transparent hover:text-white hover:border-cyan-400/50 text-[12px] transition-colors" data-title="Tiktok json upload">
+          <i class="fa-brands fa-tiktok mr-1 text-[7px]"></i><span>TikTok</span>
+        </button>
+        <button id="tab-files" class="tab-btn flex-1 text-center py-0.5 text-white/60 border-b-[1.5px] border-transparent hover:text-white hover:border-cyan-400/50 text-[12px] transition-colors" data-title="All files">
+          <i class="fa-regular fa-file mr-1 text-[7px]"></i><span>Files</span>
+        </button>
+        <button id="tab-config" class="tab-btn flex-1 text-center py-0.5 text-white/60 border-b-[1.5px] border-transparent hover:text-white hover:border-cyan-400/50 text-[12px] transition-colors" data-title="Configuration">
+          <i class="fa-solid fa-sliders mr-1 text-[7px]"></i><span>Config</span>
+        </button>
       </div>
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer class="flex-shrink-0 h-7 bg-[#0d1a1f] text-cyan-100/70 shadow-[0_-2px_10px_rgba(1,74,96,0.5)] flex items-center justify-between z-20 border-t border-[#1a3a42] px-2">
     <div class="flex items-center gap-3">
       <span class="flex items-center gap-1 mr-1 border-r border-cyan-800/30 pr-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> <span class="text-[8px] text-cyan-200/70 hidden sm:inline">Live</span></span>
-      <a href="license.html" class="hover:text-white transition-colors text-[8px]"><i class="fa-regular fa-circle-question mr-0.5 text-[8px]"></i> License</a>
+      <a href="help.html" class="hover:text-white transition-colors text-[8px]"><i class="fa-regular fa-circle-question mr-0.5 text-[8px]"></i> License</a>
       <a href="docs.html" class="hover:text-white transition-colors text-[8px]"><i class="fa-regular fa-lock mr-0.5 text-[8px] ml-[3px]"></i> Documentation</a>
       <span class="text-white/20 text-[8px]">© 2026</span>
     </div>
@@ -372,7 +429,6 @@
     </div>
   </footer>
 
-  <!-- UNLOCK MODAL -->
   <div id="unlock-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[99999] flex items-center justify-center transition-opacity duration-300">
     <div class="modal-box bg-[#0d1a1f]/95 border border-cyan-400/30 rounded-2xl p-6 max-w-[380px] w-[90%] shadow-2xl text-center transform transition-all duration-300 scale-95 translate-y-2 opacity-0">
       <div class="text-5xl text-cyan-400 mb-3"><i class="fa-solid fa-lock"></i></div>
@@ -385,7 +441,6 @@
     </div>
   </div>
 
-  <!-- CUSTOM ALERT MODAL -->
   <div id="custom-alert" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center opacity-0 transition-opacity duration-250">
     <div class="modal-box bg-[#0d1a1f]/85 backdrop-blur-xl border border-cyan-400/30 rounded-2xl p-6 max-w-[400px] w-[90%] shadow-2xl scale-95 translate-y-2 transition-all duration-250 text-center">
       <div class="text-4xl text-cyan-400 mb-2"><i class="fa-solid fa-circle-info"></i></div>
@@ -396,7 +451,6 @@
     </div>
   </div>
 
-  <!-- CUSTOM CONFIRM MODAL -->
   <div id="custom-confirm" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center opacity-0 transition-opacity duration-250">
     <div class="modal-box bg-[#0d1a1f]/85 backdrop-blur-xl border border-cyan-400/30 rounded-2xl p-6 max-w-[400px] w-[90%] shadow-2xl scale-95 translate-y-2 transition-all duration-250 text-center">
       <div class="text-4xl text-cyan-400 mb-2"><i class="fa-solid fa-triangle-exclamation"></i></div>
@@ -408,33 +462,34 @@
     </div>
   </div>
 
-  <!-- TEST RESULT MODAL -->
-<div id="test-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center opacity-0 transition-opacity duration-250">
-  <div class="modal-box bg-[#0d1a1f]/85 backdrop-blur-xl border border-cyan-400/30 rounded-2xl p-6 max-w-[400px] w-[90%] shadow-2xl scale-95 translate-y-2 transition-all duration-250 text-center">
-    <div class="text-4xl mb-2" id="test-modal-icon">
-      <i class="fa-solid fa-circle-info"></i>
-    </div>
-    <div id="test-modal-message" class="text-gray-200 text-[11px] font-medium mb-3">Test result</div>
-    <div class="flex gap-3 justify-center flex-wrap">
-      <button id="test-modal-ok-btn" class="cursor-pointer px-4 py-1 rounded-full text-[10px] font-semibold min-w-[60px] bg-[#057c94] hover:bg-[#046a80] text-white transition-all duration-200 hover:scale-105 active:scale-95">OK</button>
+  <div id="test-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center opacity-0 transition-opacity duration-250">
+    <div class="modal-box bg-[#0d1a1f]/85 backdrop-blur-xl border border-cyan-400/30 rounded-2xl p-6 max-w-[400px] w-[90%] shadow-2xl scale-95 translate-y-2 transition-all duration-250 text-center">
+      <div class="text-4xl mb-2" id="test-modal-icon">
+        <i class="fa-solid fa-circle-info"></i>
+      </div>
+      <div id="test-modal-message" class="text-gray-200 text-[11px] font-medium mb-3">Test result</div>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button id="test-modal-ok-btn" class="cursor-pointer px-4 py-1 rounded-full text-[10px] font-semibold min-w-[60px] bg-[#057c94] hover:bg-[#046a80] text-white transition-all duration-200 hover:scale-105 active:scale-95">OK</button>
+      </div>
     </div>
   </div>
-</div>
-<!-- DELETION SPINNER -->
-<div id="deletion-spinner" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[99999] flex items-center justify-center">
-  <div class="bg-[#0d1a1f]/90 border border-cyan-400/30 rounded-2xl p-6 max-w-[280px] w-[90%] shadow-2xl text-center">
-    <div class="text-4xl text-cyan-400 mb-3">
-      <i class="fa-solid fa-spinner fa-spin"></i>
+
+  <div id="deletion-spinner" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[99999] flex items-center justify-center">
+    <div class="bg-[#0d1a1f]/90 border border-cyan-400/30 rounded-2xl p-6 max-w-[280px] w-[90%] shadow-2xl text-center">
+      <div class="text-4xl text-cyan-400 mb-3">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+      </div>
+      <p class="text-gray-200 text-[11px] font-medium">Deleting files...</p>
+      <p id="deletion-count" class="text-cyan-300 text-[10px] mt-1">0 / 0</p>
     </div>
-    <p class="text-gray-200 text-[11px] font-medium">Deleting file...</p>
   </div>
-</div>
-  <!-- SCRIPTS -->
-  <script src="dom.js"></script>
-  <script src="encryptor.js"></script>
-  <script src="auth.js"></script>
-  <script src="helper.js"></script>
-  <script src="uploader.js"></script>
-<script src="script.js"></script>
+
+  <script src="js/config.js"></script>
+  <script src="js/dom.js"></script>
+  <script src="js/encryptor.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/helper.js"></script>
+  <script src="js/uploader.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
