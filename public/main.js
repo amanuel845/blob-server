@@ -617,6 +617,18 @@ function showTestModal(message, isSuccess = true) {
         });
         d.testConnectionBtn.addEventListener('click', () => this.testConnection());
 
+        const savedCategory = localStorage.getItem('uploadCategory');
+  if (savedCategory) {
+    d.uploadCategoryInput.value = savedCategory;
+  } else {
+    // Set default and save
+    d.uploadCategoryInput.value = 'json/tiktok';
+    localStorage.setItem('uploadCategory', 'json/tiktok');
+  }
+        d.uploadCategoryInput.addEventListener('change', () => {
+    localStorage.setItem('uploadCategory', d.uploadCategoryInput.value.trim());
+  });
+
         window.addEventListener('auth:ready', (e) => {
           this.uploader = e.detail.uploader;
           this.populateFileSelect();
