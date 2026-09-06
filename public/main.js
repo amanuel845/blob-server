@@ -257,9 +257,10 @@ function showTestModal(message, isSuccess = true) {
         const d = this.d;
 
         d.totalFileCount.textContent = total.toString();
+        const defaultCategory = d.uploadCategoryInput.value.trim() || UPLOAD_CATEGORY;
 
         if (!categories || !Array.isArray(categories) || categories.length !== total) {
-          categories = files.map(() => UPLOAD_CATEGORY);
+          categories = files.map(() => defaultCategory);
         }
 
         d.uploadBtn.disabled = true;
@@ -270,7 +271,7 @@ function showTestModal(message, isSuccess = true) {
         try {
           for (let i = 0; i < total; i++) {
             const file = files[i];
-            const category = categories[i] || UPLOAD_CATEGORY;
+            const category = categories[i] || defaultCategory;
 
             d.currentFileCount.textContent = (i + 1).toString();
 
