@@ -133,21 +133,21 @@
         if (this.selectedFiles.length > 1) {
           d.fileName.textContent = `${this.selectedFiles.length} files selected`;
           const totalSize = this.selectedFiles.reduce((sum, f) => sum + f.size, 0);
-          d.fileDetails.textContent = `Total: ${helper.fmtSize(totalSize)}`;
+          d.fileSize.textContent = `Total: ${helper.fmtSize(totalSize)}`;
           d.fileType.textContent = '';
           d.fileDate.textContent = '';
           return;
         }
         if (!file) {
-          d.fileName.textContent = 'Drag & drop tiktok json here';
-          d.fileDetails.textContent = 'or click to select files';
+          d.fileName.textContent = 'Original file name';
+          d.fileSize.textContent = 'File size';
           d.fileType.textContent = 'file type';
           d.fileDate.textContent = 'last modified date';
           return;
         }
         d.fileName.textContent = file.name;
         d.fileType.textContent = file.type || 'unknown type';
-        d.fileDetails.textContent = helper.fmtSize(file.size);
+        d.fileSize.textContent = helper.fmtSize(file.size);
         d.fileDate.textContent = helper.fmtDate(file.lastModified);
         const isJson = file.type === 'application/json' || file.name.toLowerCase().endsWith('.json');
         if (isJson) {
