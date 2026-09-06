@@ -16,6 +16,7 @@
     tabTiktok: document.getElementById('tab-tiktok'),
     tabFiles: document.getElementById('tab-files'),
     tabContainer: document.getElementById('tab-container'),
+    deletionSpinner: document.getElementById('deletion-spinner'),
     
     // Code pane
     fileSelect: document.getElementById('fileSelect'),
