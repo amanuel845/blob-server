@@ -413,10 +413,7 @@ function showTestModal(message, isSuccess = true) {
           } catch (err) {
             console.error('Failed to load file list:', err);
             if (d.conn) d.conn.className = 'w-1.5 h-1.5 rounded-full bg-red-800 animate-pulse';
-            if (d.testResult) {
-              d.testResult.textContent = 'Connection failed: ' + err.message;
-              d.testResult.className = 'hidden text-[9px] text-red-400';
-            }
+            
             valueSpan.textContent = '❌ Error';
             optionsContainer.innerHTML = `<div class="custom-select-option disabled">${err.message}</div>`;
             d.fileSelect.classList.remove('disabled');
