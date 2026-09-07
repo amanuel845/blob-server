@@ -198,7 +198,11 @@
   #deletion-spinner { transition: opacity 0.3s ease; }
   #deletion-spinner.hidden { opacity: 0; pointer-events: none; }
   #deletion-spinner:not(.hidden) { opacity: 1; pointer-events: auto; }
-
+.wrap-json {
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
   /*
   @media (max-width: 640px) {
     .custom-select { width: 120px; max-width: 120px; }
