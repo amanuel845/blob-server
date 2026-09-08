@@ -98,8 +98,8 @@ function getDateSuffix(timestamp) {
 
 function appendDateSuffix(filename, timestamp) {
   const dotIndex = filename.lastIndexOf('.');
-  if (dotIndex === -1) return `${filename}_${getDateSuffix(timestamp)}`;
-  return `${filename.slice(0, dotIndex)}_${getDateSuffix(timestamp)}${filename.slice(dotIndex)}`;
+  if (dotIndex === -1) return `${filename}-${getDateSuffix(timestamp)}`;
+  return `${filename.slice(0, dotIndex)}-${getDateSuffix(timestamp)}${filename.slice(dotIndex)}`;
 }
 
 // ------------------------------------------------------------
