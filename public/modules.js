@@ -1873,7 +1873,7 @@ const app = (function() {
           setTimeout(() => {
             btn.disabled = false;
             btn.classList.remove('opacity-60', 'cursor-wait');
-            btn.innerHTML = '<i class="fa-regular fa-circle-check"></i> Saved';
+            btn.innerHTML = '<i class="fa-regular fa-circle-check"></i>';
             setTimeout(() => {
               btn.innerHTML = originalHtml;
             }, 1500);
