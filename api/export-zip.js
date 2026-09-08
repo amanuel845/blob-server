@@ -24,26 +24,26 @@ export default async function handler(req, res) {
   try {
     const { blobs } = await list({ token: BLOB_READ_WRITE_TOKEN });
 
-    // ✅ BULLETPROOF CATEGORY FILTER
-    const categoryParam = req.query.category || 'uploads/image/ai/';
-    
-    // Remove leading/trailing slashes and whitespace
-    const cleanCategory = categoryParam.trim().replace(/^\/+|\/+$/g, '');
+    // ✅ EXACT LOGIC FROM YOUR MAIN APP
+    let category = (req.query.category || 'image/ai').trim();
 
-    // SAFETY CHECK: If empty, or it's the root uploads folder, force it to AI images
-    let finalFilter = 'uploads/image/ai/';
-    if (cleanCategory && cleanCategory !== 'uploads') {
-      // Ensure it starts with uploads/
-      finalFilter = cleanCategory.startsWith('uploads/') 
-        ? cleanCategory 
-        : `uploads/${cleanCategory}`;
-      
-      // Ensure it ends with a slash
-      if (!finalFilter.endsWith('/')) finalFilter += '/';
+    // If someone passes 'uploads/image/ai/', strip the 'uploads/' prefix
+    if (category.startsWith('uploads/')) {
+      category = category.replace(/^uploads\//, '');
     }
 
-    // Filter based on the safe finalFilter
-    const filteredBlobs = blobs.filter(b => b.pathname.startsWith(finalFilter));
+    // Remove any leading/trailing slashes just in case
+    category = category.replace(/^\/+|\/+$/g, '');
+
+    // Construct the final filter EXACTLY like helper.filterBlobs does:
+    const finalFilter = `uploads/${category}/`;
+    
+    const filteredBlobs = blobs.filter(blob => blob.pathname.startsWith(finalFilter));
+
+    // Safety: Prevent downloading everything if root uploads is selected
+    if (!finalFilter.startsWith('uploads/') || finalFilter === 'uploads/') {
+      return res.status(400).json({ error: 'Invalid category. Cannot download root.' });
+    }
 
     if (filteredBlobs.length === 0) {
       return res.status(404).json({ error: `No blobs found in ${finalFilter}` });
