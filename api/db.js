@@ -305,7 +305,7 @@ async function handleNormalUpload(fields, files, req, res) {
     access: 'public',
     contentType: contentType,
     token: BLOB_READ_WRITE_TOKEN,
-    addRandomSuffix: true,
+    addRandomSuffix: false,
     metadata: {
       lastModified: String(lastModified),
     },
@@ -346,7 +346,7 @@ async function handleChunkUpload(fields, files, res) {
     access: 'public',
     contentType: 'application/octet-stream',
     token: BLOB_READ_WRITE_TOKEN,
-    addRandomSuffix: true,
+    addRandomSuffix: false,
     metadata: {
       fileId,
       chunkIndex: String(chunkIndex),
