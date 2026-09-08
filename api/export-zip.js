@@ -11,43 +11,36 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-  // ✅ CORS headers (allows your standalone HTML to call it)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // ✅ Authentication (Uses the same API key logic)
   const authHeader = req.headers.authorization || '';
   const clientKey = authHeader.replace('Bearer ', '');
-  if (clientKey !== API_SECRET_KEY) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+  if (clientKey !== API_SECRET_KEY) return res.status(401).json({ error: 'Unauthorized' });
 
   try {
-    // ✅ List all blobs using the Vercel SDK
     const { blobs } = await list({ token: BLOB_READ_WRITE_TOKEN });
 
-    // ✅ Filter for AI images only
-    const aiBlobs = blobs.filter(b => b.pathname.startsWith('uploads/image/ai/'));
+    // ✅ DYNAMIC CATEGORY FILTER (Default is 'uploads/image/ai/')
+    const categoryParam = req.query.category || 'uploads/image/ai/';
+    const finalFilter = categoryParam.startsWith('uploads/') ? categoryParam : `uploads/${categoryParam}/`;
+    
+    const filteredBlobs = blobs.filter(b => b.pathname.startsWith(finalFilter));
 
-    if (aiBlobs.length === 0) {
-      return res.status(404).json({ error: 'No AI blobs found' });
+    if (filteredBlobs.length === 0) {
+      return res.status(404).json({ error: `No blobs found in ${finalFilter}` });
     }
 
     const zip = new JSZip();
 
-    // ✅ Download each image and add to ZIP
-    for (const blob of aiBlobs) {
+    for (const blob of filteredBlobs) {
       const response = await fetch(blob.url);
-      if (!response.ok) continue; // Skip failed downloads
+      if (!response.ok) continue;
 
       const imageBuffer = await response.arrayBuffer();
-
-      // ✅ Remove random suffix (24-char alphanumeric)
       const filename = blob.pathname.split('/').pop();
       const ext = filename.slice(filename.lastIndexOf('.'));
       const base = filename.slice(0, filename.lastIndexOf('.'));
@@ -55,16 +48,13 @@ export default async function handler(req, res) {
       if (parts.length > 1 && /^[A-Za-z0-9]{24}$/.test(parts[parts.length - 1])) {
         parts.pop();
       }
-      const cleanName = parts.join('-') + ext;
-
-      zip.file(cleanName, imageBuffer);
+      zip.file(parts.join('-') + ext, imageBuffer);
     }
 
-    // ✅ Generate ZIP and send
     const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' });
 
     res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', 'attachment; filename="ai-images.zip"');
+    res.setHeader('Content-Disposition', 'attachment; filename="download.zip"');
     res.setHeader('Content-Length', zipBuffer.length);
     return res.status(200).send(zipBuffer);
 
