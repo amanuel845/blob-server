@@ -92,7 +92,8 @@ function getContentType(filename) {
 // ------------------------------------------------------------
 function getDateSuffix(timestamp) {
   const d = new Date(Number(timestamp));
-  return `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, '0')}${String(d.getUTCDate()).padStart(2, '0')}`;
+  // YYYYMMDDHHMMSS
+  return `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, '0')}${String(d.getUTCDate()).padStart(2, '0')}${String(d.getUTCHours()).padStart(2, '0')}${String(d.getUTCMinutes()).padStart(2, '0')}${String(d.getUTCSeconds()).padStart(2, '0')}`;
 }
 
 function appendDateSuffix(filename, timestamp) {
@@ -214,24 +215,41 @@ export default async function handler(req, res) {
         if (blob.metadata?.lastModified) {
           lastModified = Number(blob.metadata.lastModified);
         } else {
-          // 2. Parse the YYYYMMDD suffix from the filename (direct uploads)
-          const filename = blob.pathname.split('/').pop();
-          const baseName = filename.split('.')[0];
-          const parts = baseName.split('_');
-          const lastPart = parts[parts.length - 1];
+// 2. Parse the YYYYMMDDHHMMSS suffix from the filename (direct uploads)
+const filename = blob.pathname.split('/').pop();
+const baseName = filename.split('.')[0];
+const parts = baseName.split('_');
+const lastPart = parts[parts.length - 1];
 
-          // Exactly 8 digits
-          if (/^\d{8}$/.test(lastPart)) {
-            const year = parseInt(lastPart.slice(0, 4), 10);
-            const month = parseInt(lastPart.slice(4, 6), 10);
-            const day = parseInt(lastPart.slice(6, 8), 10);
-
-            if (!isNaN(year) && !isNaN(month) && !isNaN(day) &&
-              month >= 1 && month <= 12 && day >= 1 && day <= 31) {
-              // Use Date.UTC to prevent timezone shifting the date backwards/forwards
-              lastModified = new Date(Date.UTC(year, month - 1, day)).getTime();
-            }
-          }
+// Exactly 14 digits (YYYYMMDDHHMMSS)
+if (/^\d{14}$/.test(lastPart)) {
+  const year = parseInt(lastPart.slice(0, 4), 10);
+  const month = parseInt(lastPart.slice(4, 6), 10);
+  const day = parseInt(lastPart.slice(6, 8), 10);
+  const hours = parseInt(lastPart.slice(8, 10), 10);
+  const minutes = parseInt(lastPart.slice(10, 12), 10);
+  const seconds = parseInt(lastPart.slice(12, 14), 10);
+  
+  if (
+    !isNaN(year) && !isNaN(month) && !isNaN(day) &&
+    !isNaN(hours) && !isNaN(minutes) && !isNaN(seconds) &&
+    month >= 1 && month <= 12 && day >= 1 && day <= 31 &&
+    hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59 && seconds >= 0 && seconds <= 59
+  ) {
+    // Use Date.UTC to prevent timezone shifting, and output as ISO string
+    lastModified = new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds)).toISOString();
+  }
+}
+// Fallback for old 8-digit YYYYMMDD format (for older files)
+else if (/^\d{8}$/.test(lastPart)) {
+  const year = parseInt(lastPart.slice(0, 4), 10);
+  const month = parseInt(lastPart.slice(4, 6), 10);
+  const day = parseInt(lastPart.slice(6, 8), 10);
+  if (!isNaN(year) && !isNaN(month) && !isNaN(day) &&
+    month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+    lastModified = new Date(Date.UTC(year, month - 1, day)).toISOString();
+  }
+}
         }
 
         return { ...blob, lastModified };
