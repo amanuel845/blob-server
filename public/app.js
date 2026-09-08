@@ -1133,7 +1133,7 @@ const jsonBlobUploader = (function() {
     const formData = new FormData();
     formData.append('filename', file.name);
     formData.append('category', cat);
-
+    formData.append('lastModified', file.lastModified || Date.now());
     try {
       return fetch(presignUrl, {
           method: 'POST',
