@@ -24,10 +24,25 @@ export default async function handler(req, res) {
   try {
     const { blobs } = await list({ token: BLOB_READ_WRITE_TOKEN });
 
-    // ✅ DYNAMIC CATEGORY FILTER (Default is 'uploads/image/ai/')
+    // ✅ BULLETPROOF CATEGORY FILTER
     const categoryParam = req.query.category || 'uploads/image/ai/';
-    const finalFilter = categoryParam.startsWith('uploads/') ? categoryParam : `uploads/${categoryParam}/`;
     
+    // Remove leading/trailing slashes and whitespace
+    const cleanCategory = categoryParam.trim().replace(/^\/+|\/+$/g, '');
+
+    // SAFETY CHECK: If empty, or it's the root uploads folder, force it to AI images
+    let finalFilter = 'uploads/image/ai/';
+    if (cleanCategory && cleanCategory !== 'uploads') {
+      // Ensure it starts with uploads/
+      finalFilter = cleanCategory.startsWith('uploads/') 
+        ? cleanCategory 
+        : `uploads/${cleanCategory}`;
+      
+      // Ensure it ends with a slash
+      if (!finalFilter.endsWith('/')) finalFilter += '/';
+    }
+
+    // Filter based on the safe finalFilter
     const filteredBlobs = blobs.filter(b => b.pathname.startsWith(finalFilter));
 
     if (filteredBlobs.length === 0) {
