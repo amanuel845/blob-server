@@ -9,12 +9,23 @@ export const config = {
 };
 
 export default async function handler(req, res) {
+  // ✅ CRITICAL FIX: CORS headers (without these, the browser gives Error 0)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const form = new IncomingForm();
-  
+  const form = new IncomingForm({
+    maxFileSize: 50 * 1024 * 1024, // 50MB limit to prevent crashes
+  });
+
   try {
     const { files } = await new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
@@ -29,8 +40,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'File is required' });
     }
 
-    // Stream the file into the crypto hash (prevents server memory overload)
-    const hash = crypto.createHash('md5'); // or 'sha256'
+    const hash = crypto.createHash('md5');
 
     await new Promise((resolve, reject) => {
       const stream = fs.createReadStream(file.filepath);
@@ -41,12 +51,7 @@ export default async function handler(req, res) {
 
     const md5Hash = hash.digest('hex');
 
-    // Optional: Return file metadata so you can check duplicates by name/date too
-    return res.status(200).json({ 
-      hash: md5Hash,
-      filename: file.originalFilename,
-      size: file.size
-    });
+    return res.status(200).json({ hash: md5Hash });
 
   } catch (error) {
     console.error('Error hashing file:', error);
