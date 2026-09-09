@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AI ZIP Downloader</title>
+  <title>ZIP Downloader</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Essential for real progress: JSZip and FileSaver -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -28,7 +31,7 @@
         </p>
       </div>
 
-      <!-- Dynamic Category Input -->
+      <!-- Category Input -->
       <div class="w-full bg-[#1a2e36] rounded-lg p-3 shadow-xl border border-cyan-400/30">
         <label class="text-[10px] text-cyan-300 block mb-1">Category Path:</label>
         <input type="text" id="category" 
@@ -36,13 +39,16 @@
                value="uploads/image/ai/" />
       </div>
 
+      <!-- Download Button -->
       <button id="downloadBtn" class="w-full bg-[#057c94] hover:bg-[#046a80] text-white px-4 py-2 rounded text-[12px] border border-cyan-600/30 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
         <i class="fa-solid fa-file-zipper"></i> Download ZIP
       </button>
 
+      <!-- Real-Time Progress -->
       <div class="w-full bg-[#1a2e36] rounded-lg p-2 shadow-xl border border-cyan-400/30">
         <div class="flex justify-between items-center mb-1">
           <span id="status" class="text-[10px] text-cyan-200">Ready</span>
+          <span id="count" class="text-[10px] text-cyan-200/70">0 / 0</span>
         </div>
         <div class="w-full bg-white/20 rounded-full h-1.5 overflow-hidden">
           <div id="progressBar" class="bg-cyan-400 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
@@ -53,89 +59,127 @@
   </main>
 
   <script>
-    // ✅ Read the key from localStorage (must be on the same origin)
+    // READ KEY FROM LOCALSTORAGE
     const STORAGE_KEY = 'blob-db-storage-key';
-    const API_BASE_URL = 'https://blob-server.vercel.app/api/export-zip';
+    const API_BASE_URL = 'https://blob-server.vercel.app/api';
+    const BLOB_DB_ENDPOINT = '/blob-server';
 
     function getApiKey() {
       return localStorage.getItem(STORAGE_KEY) || '';
     }
 
-    // Update the status message based on whether the key exists
-    const keyStatus = document.getElementById('key-status');
-    const storedKey = getApiKey();
+    // List Blobs (Exactly like your main app)
+    async function listBlobs() {
+      const url = `${API_BASE_URL}${BLOB_DB_ENDPOINT}?_=${Date.now()}`;
+      const authKey = getApiKey();
+      const headers = {};
+      if (authKey) {
+        headers['Authorization'] = 'Bearer ' + authKey;
+      }
+      
+      try {
+        const response = await fetch(url, { headers });
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const data = await response.json();
+        return data.blobs || [];
+      } catch (err) {
+        if (DEBUG) { console.error('Failed to list blobs', err); }
+        throw err;
+      }
+    }
 
+    // UI Elements
+    const keyStatus = document.getElementById('key-status');
+    const categoryInput = document.getElementById('category');
+    const btn = document.getElementById('downloadBtn');
+    const status = document.getElementById('status');
+    const count = document.getElementById('count');
+    const progressBar = document.getElementById('progressBar');
+
+    // Initial key status
+    const storedKey = getApiKey();
     if (storedKey) {
       keyStatus.textContent = '✅ API key found in localStorage.';
       keyStatus.className = 'text-[10px] text-green-400';
     } else {
-      keyStatus.textContent = '❌ No key found. Unlock the main app first (or manually paste below).';
+      keyStatus.textContent = '❌ No key found. Unlock the main app first.';
       keyStatus.className = 'text-[10px] text-red-400';
     }
 
-    // Optional fallback: if no key, let user paste it manually
-    if (!storedKey) {
-      const input = document.createElement('input');
-      input.type = 'password';
-      input.placeholder = 'Paste API key here';
-      input.className = 'w-full bg-[#0d1a1f] border border-cyan-500/30 rounded px-2 py-1 text-[10px] text-cyan-200 font-mono focus:outline-none focus:border-cyan-400 mb-2';
-      input.id = 'manual-key';
-      document.querySelector('.bg-\\[\\#1a2e36\\]').appendChild(input);
-    }
-
-    const btn = document.getElementById('downloadBtn');
-    const status = document.getElementById('status');
-    const progressBar = document.getElementById('progressBar');
-    const categoryInput = document.getElementById('category');
-
     btn.addEventListener('click', async () => {
-      // Get the key: from localStorage or from the manual input
-      let apiKey = getApiKey();
+      const apiKey = getApiKey();
       if (!apiKey) {
-        const manualInput = document.getElementById('manual-key');
-        apiKey = manualInput ? manualInput.value : '';
-      }
-
-      if (!apiKey) {
-        status.textContent = '❌ No API key available.';
+        status.textContent = '❌ No API key available. Please unlock the main app first.';
         return;
       }
 
-      // ✅ Dynamic category value
-      const category = categoryInput.value.trim() || 'uploads/image/ai/';
-      const EXPORT_URL = `${API_BASE_URL}?category=${encodeURIComponent(category)}`;
-
+      // Disable button
       btn.disabled = true;
-      status.textContent = 'Requesting ZIP from server...';
-      progressBar.style.width = '30%';
+      status.textContent = 'Fetching blob list...';
+      count.textContent = '0 / 0';
+      progressBar.style.width = '0%';
 
       try {
-        const response = await fetch(EXPORT_URL, {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer ' + apiKey
-          }
-        });
+        // 1. Fetch the blob list
+        const blobs = await listBlobs();
 
-        if (!response.ok) {
-          const errData = await response.json().catch(() => ({}));
-          throw new Error(errData.error || 'Server error');
+        // 2. Filter by category (matching your main app logic)
+        const category = categoryInput.value.trim() || 'uploads/image/ai/';
+        const finalFilter = category.startsWith('uploads/') 
+          ? category 
+          : `uploads/${category}/`;
+        
+        const filteredBlobs = blobs.filter(b => b.pathname.startsWith(finalFilter));
+
+        if (filteredBlobs.length === 0) {
+          status.textContent = 'No files found in this category.';
+          btn.disabled = false;
+          return;
         }
 
-        progressBar.style.width = '70%';
-        const blob = await response.blob();
+        // 3. Start downloading with REAL progress
+        const zip = new JSZip();
+        let downloadedCount = 0;
+        const total = filteredBlobs.length;
         
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'download.zip';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+        count.textContent = `0 / ${total}`;
+        status.textContent = 'Starting download...';
 
-        progressBar.style.width = '100%';
+        for (const blob of filteredBlobs) {
+          try {
+            const res = await fetch(blob.url);
+            if (!res.ok) throw new Error(`Failed to download ${blob.pathname}`);
+            const imageBlob = await res.blob();
+
+            // Clean the filename (remove random suffix)
+            const filename = blob.pathname.split('/').pop();
+            const ext = filename.slice(filename.lastIndexOf('.'));
+            const base = filename.slice(0, filename.lastIndexOf('.'));
+            const parts = base.split('-');
+            if (parts.length > 1 && /^[A-Za-z0-9]{24}$/.test(parts[parts.length - 1])) {
+              parts.pop();
+            }
+            const cleanName = parts.join('-') + ext;
+            
+            zip.file(cleanName, imageBlob);
+          } catch (err) {
+            console.warn('Skipping file:', blob.pathname, err);
+          }
+
+          downloadedCount++;
+          // Update real progress
+          count.textContent = `${downloadedCount} / ${total}`;
+          progressBar.style.width = `${(downloadedCount / total) * 100}%`;
+          status.textContent = `Downloading file ${downloadedCount} of ${total}...`;
+        }
+
+        // 4. Generate and save ZIP
+        status.textContent = 'Creating ZIP file...';
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        saveAs(zipBlob, 'download.zip');
+
         status.textContent = '✅ ZIP downloaded successfully!';
+        progressBar.style.width = '100%';
       } catch (err) {
         console.error(err);
         status.textContent = '❌ Error: ' + err.message;
