@@ -156,7 +156,7 @@
             const ext = filename.slice(filename.lastIndexOf('.'));
             const base = filename.slice(0, filename.lastIndexOf('.'));
             const parts = base.split('-');
-            if (parts.length > 1 && /^[A-Za-z0-9]{24}$/.test(parts[parts.length - 1])) {
+            if (parts.length > 1 && /^[A-Za-z0-9]{32}$/.test(parts[parts.length - 1])) {
               parts.pop();
             }
             const cleanName = parts.join('-') + ext;
