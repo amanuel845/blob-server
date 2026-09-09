@@ -68,6 +68,23 @@
       return localStorage.getItem(STORAGE_KEY) || '';
     }
 
+    // Your exact robust method
+    function getDisplayName(pathname) {
+      const fullName = pathname.split('/').pop();
+      const lastDot = fullName.lastIndexOf('.');
+      if (lastDot === -1) {
+        return fullName;
+      }
+      const base = fullName.substring(0, lastDot);
+      const ext = fullName.substring(lastDot);
+      const parts = base.split('-');
+      const lastPart = parts[parts.length - 1];
+      if (parts.length > 1 && lastPart.length >= 20 && /^[A-Za-z0-9]+$/.test(lastPart)) {
+        parts.pop();
+        return parts.join('-') + ext;
+      }
+      return fullName;
+    }
     // List Blobs (Exactly like your main app)
     async function listBlobs() {
       const url = `${API_BASE_URL}${BLOB_DB_ENDPOINT}?_=${Date.now()}`;
@@ -152,14 +169,7 @@
             const imageBlob = await res.blob();
 
             // Clean the filename (remove random suffix)
-            const filename = blob.pathname.split('/').pop();
-            const ext = filename.slice(filename.lastIndexOf('.'));
-            const base = filename.slice(0, filename.lastIndexOf('.'));
-            const parts = base.split('-');
-            if (parts.length > 1 && /^[A-Za-z0-9]{32}$/.test(parts[parts.length - 1])) {
-              parts.pop();
-            }
-            const cleanName = parts.join('-') + ext;
+            const cleanName = getDisplayName(blob.pathname);
             
             zip.file(cleanName, imageBlob);
           } catch (err) {
